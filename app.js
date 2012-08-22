@@ -201,6 +201,16 @@
               message: "You Lose!"
             });
             return delete rooms[rooms.indexOf(room)];
+          } else {
+            if (snakeBodyCollision(player2head, data.p1position) || ((player2head[0] < 1 || player2head[0] >= 58) || (player2head[1] < 1 || player2head[1] >= 38))) {
+              roomSend(room, socket, 'gameEnd', {
+                message: "You Win!"
+              });
+              socket.emit('gameEnd', {
+                message: "You Lose!"
+              });
+              return delete rooms[rooms.indexOf(room)];
+            }
           }
         } else {
           if (snakeBodyCollision(player1head, data.p2position) || ((player1head[0] < 1 || player1head[0] >= 58) || (player1head[1] < 1 || player1head[1] >= 38))) {
@@ -211,6 +221,16 @@
               message: "You Lose!"
             });
             return delete rooms[rooms.indexOf(room)];
+          } else {
+            if (snakeBodyCollision(player2head, data.p1position) || ((player2head[0] < 1 || player2head[0] >= 58) || (player2head[1] < 1 || player2head[1] >= 38))) {
+              roomSend(room, socket, 'gameEnd', {
+                message: "You Win!"
+              });
+              socket.emit('gameEnd', {
+                message: "You Lose!"
+              });
+              return delete rooms[rooms.indexOf(room)];
+            }
           }
         }
       });
