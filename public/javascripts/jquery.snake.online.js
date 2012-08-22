@@ -273,7 +273,8 @@
                 checkCollision: checkCollision,
                 bodyCollision: bodyCollision,
                 retreat: retreat,
-                getPosition: getPosition
+                getPosition: getPosition,
+                setPosition: setPosition
             };
         }
 
