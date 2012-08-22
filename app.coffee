@@ -39,6 +39,10 @@ app.get '/socket.js', (req, res) ->
 server = http.createServer(app)
 io = require('socket.io').listen(server)
 
+io.configure ->
+  io.set "transports", ["xhr-polling"]
+  io.set "polling duration", 10
+
 server.listen app.get('port'), ->
   console.log "Express server listening on port " + app.get('port');
 
