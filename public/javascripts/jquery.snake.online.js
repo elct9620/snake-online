@@ -80,11 +80,14 @@
                 apple.draw(canvas);
 
                 if (player1.checkCollision(player2.getPosition()) || player2.checkCollision(player1.getPosition())) {
+                    if (player1.checkCollision(player2.getPosition())) {
+                        console.log('dead');
+                        $(player1).trigger('dead');
+                    }
                     player1.retreat();
                     player1.draw(canvas);
                     player2.retreat();
                     player2.draw(canvas);
-                    $(player1).trigger('dead');
                 } else {
                     // Update Frame
                     game = setTimeout(updateFrame, frameLength);
