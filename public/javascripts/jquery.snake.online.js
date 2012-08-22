@@ -80,10 +80,7 @@
                 apple.draw(canvas);
 
                 if (player1.checkCollision(player2.getPosition()) || player2.checkCollision(player1.getPosition())) {
-                    if (player1.checkCollision(player2.getPosition())) {
-                        console.log('dead');
-                        $(player1).trigger('dead');
-                    }
+                    $(player1).trigger('dead');
                     player1.retreat();
                     player1.draw(canvas);
                     player2.retreat();
@@ -388,7 +385,10 @@
                 });
 
                 $(player1).bind('dead', function (event) {
-                    server.emit('gameEnd');
+                    server.emit('gameEnd', {
+                        p1position: player1.getPosition(),
+                        p2position: player2.getPosition()
+                    });
                 });
 
             });

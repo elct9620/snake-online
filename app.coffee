@@ -48,10 +48,12 @@ server.listen app.get('port'), ->
 
 # Apple Handler
 snakeBodyCollision = (head, snakeArray) ->
-  rest = snakeArray.slice(1)
   isInArray = false
 
-  for section in rest
+  for section in snakeArray
+    console.log section
+    console.log head[0], section[0], head[1], section[1]
+    console.log head[0] is section[0] and head[1] is section[1]
     if head[0] is section[0] and head[1] is section[1]
       isInArray = true
 
@@ -158,9 +160,21 @@ io.sockets.on 'connection', (socket) ->
   # Game End
   socket.on 'gameEnd', (data) ->
     socket.get 'room', (err, room) ->
-      roomSend room, socket, 'gameEnd', {message: "You Win!"}
-      socket.emit 'gameEnd', {message: "You Lose!"}
-      delete rooms[rooms.indexOf(room)]
+      player1head = data.p1position[0]
+      player2head = data.p2position[0]
+      console.log player1head, player2head
+
+      if room and room.player1 is socket
+        if snakeBodyCollision(player1head, data.p2position)  or ( (player1head[0] < 1 or player1head[0] >= 58 ) or ( player1head[1] < 1 or player1head[1] >= 38) )
+          roomSend room, socket, 'gameEnd', {message: "You Win!"}
+          socket.emit 'gameEnd', {message: "You Lose!"}
+          delete rooms[rooms.indexOf(room)]
+      else
+        if snakeBodyCollision(player1head, data.p2position)  or ( (player1head[0] < 1 or player1head[0] >= 58 ) or ( player1head[1] < 1 or player1head[1] >= 38) )
+          roomSend room, socket, 'gameEnd', {message: "You Win!"}
+          socket.emit 'gameEnd', {message: "You Lose!"}
+          delete rooms[rooms.indexOf(room)]
+
 
   #Disconnect
   socket.on 'disconnect', (data) ->

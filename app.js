@@ -56,11 +56,13 @@
   });
 
   snakeBodyCollision = function(head, snakeArray) {
-    var isInArray, rest, section, _i, _len;
-    rest = snakeArray.slice(1);
+    var isInArray, section, _i, _len;
     isInArray = false;
-    for (_i = 0, _len = rest.length; _i < _len; _i++) {
-      section = rest[_i];
+    for (_i = 0, _len = snakeArray.length; _i < _len; _i++) {
+      section = snakeArray[_i];
+      console.log(section);
+      console.log(head[0], section[0], head[1], section[1]);
+      console.log(head[0] === section[0] && head[1] === section[1]);
       if (head[0] === section[0] && head[1] === section[1]) {
         isInArray = true;
       }
@@ -186,13 +188,31 @@
     });
     socket.on('gameEnd', function(data) {
       return socket.get('room', function(err, room) {
-        roomSend(room, socket, 'gameEnd', {
-          message: "You Win!"
-        });
-        socket.emit('gameEnd', {
-          message: "You Lose!"
-        });
-        return delete rooms[rooms.indexOf(room)];
+        var player1head, player2head;
+        player1head = data.p1position[0];
+        player2head = data.p2position[0];
+        console.log(player1head, player2head);
+        if (room && room.player1 === socket) {
+          if (snakeBodyCollision(player1head, data.p2position) || ((player1head[0] < 1 || player1head[0] >= 58) || (player1head[1] < 1 || player1head[1] >= 38))) {
+            roomSend(room, socket, 'gameEnd', {
+              message: "You Win!"
+            });
+            socket.emit('gameEnd', {
+              message: "You Lose!"
+            });
+            return delete rooms[rooms.indexOf(room)];
+          }
+        } else {
+          if (snakeBodyCollision(player1head, data.p2position) || ((player1head[0] < 1 || player1head[0] >= 58) || (player1head[1] < 1 || player1head[1] >= 38))) {
+            roomSend(room, socket, 'gameEnd', {
+              message: "You Win!"
+            });
+            socket.emit('gameEnd', {
+              message: "You Lose!"
+            });
+            return delete rooms[rooms.indexOf(room)];
+          }
+        }
       });
     });
     return socket.on('disconnect', function(data) {
