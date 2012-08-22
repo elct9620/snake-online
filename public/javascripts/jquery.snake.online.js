@@ -322,7 +322,9 @@
             });
 
             server.on('noPlayer', function (data) {
-                newGame();
+                $('#new').removeAttr('disabled');
+                $('#join').removeAttr('disabled');
+
             });
 
             server.on('start', function (data) {
