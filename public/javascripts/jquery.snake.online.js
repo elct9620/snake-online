@@ -55,8 +55,8 @@
 
             canvas.restore();
 
-            $('#new').attr('disabled', true);
-            $('#join').attr('disabled', true);
+            $('#new').removeAttr('disabled');
+            $('#join').removeAttr('disabled');
         }
 
         function updateFrame() {
@@ -317,8 +317,12 @@
                 server.emit('join');
                 newGame();
                 $(this).attr('disabled', true);
-                $('#join').attr('disabled', true);
+                $('#new').attr('disabled', true);
                 event.preventDefault();
+            });
+
+            server.on('noPlayer', function (data) {
+                newGame();
             });
 
             server.on('start', function (data) {

@@ -87,6 +87,7 @@ newRoom = (socket) ->
   }
 
 findRoom = (socket) ->
+  joined = false
   for room in rooms
     if room and room.waiting
       room.player2 = socket
@@ -95,7 +96,11 @@ findRoom = (socket) ->
       room.player2.emit 'start', {player1: false}
       room.player1.set 'room', room
       room.player2.set 'room', room
+      joined = true
       break
+
+  unless joined
+    socket.emit 'noPlayer'
 
 roomBroadcast = (room, event, data) ->
   if room and room.player1 and room.player2

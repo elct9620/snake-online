@@ -46,6 +46,11 @@
 
   io = require('socket.io').listen(server);
 
+  io.configure(function() {
+    io.set("transports", ["xhr-polling"]);
+    return io.set("polling duration", 10);
+  });
+
   server.listen(app.get('port'), function() {
     return console.log("Express server listening on port " + app.get('port'));
   });
@@ -98,8 +103,8 @@
   };
 
   findRoom = function(socket) {
-    var room, _i, _len, _results;
-    _results = [];
+    var joined, room, _i, _len;
+    joined = false;
     for (_i = 0, _len = rooms.length; _i < _len; _i++) {
       room = rooms[_i];
       if (room && room.waiting) {
@@ -113,12 +118,13 @@
         });
         room.player1.set('room', room);
         room.player2.set('room', room);
+        joined = true;
         break;
-      } else {
-        _results.push(void 0);
       }
     }
-    return _results;
+    if (!joined) {
+      return socket.emit('noPlayer');
+    }
   };
 
   roomBroadcast = function(room, event, data) {
