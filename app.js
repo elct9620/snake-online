@@ -130,8 +130,8 @@
   roomBroadcast = function(room, event, data) {
     if (room && room.player1 && room.player2) {
       room.player1.emit(event, data);
+      return room.player2.emit(event, data);
     }
-    return room.player2.emit(event, data);
   };
 
   roomSend = function(room, socket, event, data) {
@@ -145,10 +145,12 @@
   };
 
   roomUpdatePosition = function(room, socket, position) {
-    if (room.player1 === socket) {
-      return room.p2position = position;
-    } else {
-      return room.p1position = position;
+    if (room && room.player1 && room.player2) {
+      if (room.player1 === socket) {
+        return room.p2position = position;
+      } else {
+        return room.p1position = position;
+      }
     }
   };
 

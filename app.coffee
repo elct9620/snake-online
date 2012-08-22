@@ -105,7 +105,7 @@ findRoom = (socket) ->
 roomBroadcast = (room, event, data) ->
   if room and room.player1 and room.player2
     room.player1.emit event, data
-  room.player2.emit event, data
+    room.player2.emit event, data
 
 roomSend = (room, socket, event, data) ->
   if room and room.player1 and room.player2
@@ -115,10 +115,11 @@ roomSend = (room, socket, event, data) ->
       room.player1.emit event, data
 
 roomUpdatePosition = (room, socket, position) ->
-  if room.player1 is socket
-    room.p2position = position
-  else
-    room.p1position = position
+  if room and room.player1 and room.player2
+    if room.player1 is socket
+      room.p2position = position
+    else
+      room.p1position = position
 
 # Socket Server
 io.sockets.on 'connection', (socket) ->
